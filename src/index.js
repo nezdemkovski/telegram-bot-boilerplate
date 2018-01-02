@@ -1,15 +1,32 @@
-import { bot } from './botInit';
+import Telegraf from 'telegraf';
+import { about } from './commands';
+import { greeting } from './text';
 
-const replyToMessage = (ctx, messageId, string) =>
-  ctx.reply(string, {
-    reply_to_message_id: messageId,
-  });
+const debug = require('debug')('bot');
 
-bot.on('text', ctx => {
-  const messageId = ctx.message.message_id;
-  const userName = `${ctx.message.from.first_name} ${
-    ctx.message.from.last_name
-  }`;
+const BOT_TOKEN = process.env.BOT_TOKEN;
+const USERNAME = process.env.USERNAME;
+const PORT = process.env.PORT || 3000;
+const WEBHOOK_URL = `${process.env.WEBHOOK_URL}/bot${BOT_TOKEN}`;
 
-  replyToMessage(ctx, messageId, `Hello, ${userName}!`);
-});
+const bot = new Telegraf(BOT_TOKEN, { username: USERNAME });
+
+bot.command('about', about()).on('text', greeting());
+
+const production = () => {
+  debug('Bot runs in production mode');
+  debug(`${USERNAME} setting webhook: ${WEBHOOK_URL}`);
+  bot.telegram.setWebhook(WEBHOOK_URL);
+  debug(`${USERNAME} starting webhook on port: ${PORT}`);
+  bot.startWebhook(`/bot${BOT_TOKEN}`, null, PORT);
+};
+
+const development = () => {
+  debug('Bot runs in development mode');
+  debug(`${USERNAME} deleting webhook`);
+  bot.telegram.deleteWebhook();
+  debug(`${USERNAME} starting polling`);
+  bot.startPolling();
+};
+
+process.env.NODE_ENV === 'production' ? production() : development();

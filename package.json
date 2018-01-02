@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "Telegram Bot Boilerplate",
   "main": "src/index.js",
+  "author": "Yuri Yakovlev <contact@yakovlevyuri.com> (https://yakovlevyuri.com/)",
+  "homepage": "https://github.com/yakovlevyuri/telegram-bot-boilerplate",
   "dependencies": {
     "botanio": "^0.0.6",
     "dotenv-cli": "^1.4.0",
@@ -13,13 +15,12 @@
     "babel-cli": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
-    "localtunnel": "^1.8.3",
+    "debug": "^3.1.0",
     "nodemon": "^1.12.1",
     "prettier": "^1.8.2"
   },
   "scripts": {
-    "dev": "dotenv -- nodemon --exec babel-node src/index.js",
-    "localtunnel": "lt --subdomain telegrambot --port 3000",
+    "dev": "DEBUG=bot* dotenv -- nodemon --exec babel-node src/index.js",
     "start": "NODE_ENV=production WEBHOOK_URL=${NOW_URL} node dist/index.js",
     "build": "babel src --out-dir dist",
     "deploy": "now --dotenv=.env.prod",
