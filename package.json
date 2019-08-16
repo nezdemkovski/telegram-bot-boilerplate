@@ -3,28 +3,25 @@
   "version": "1.0.0",
   "description": "Telegram Bot Boilerplate",
   "main": "src/index.js",
-  "author": "Yuri Yakovlev <contact@yakovlevyuri.com> (https://yakovlevyuri.com/)",
+  "author": "Yuri Yakovlev <hi@mynameisyuri.com> (https://mynameisyuri.com/)",
   "homepage": "https://github.com/yakovlevyuri/telegram-bot-boilerplate",
   "dependencies": {
-    "botanio": "^0.0.6",
-    "dotenv-cli": "^1.4.0",
-    "express": "^4.16.3",
-    "telegraf": "^3.24.0"
+    "dotenv-cli": "^2.0.1",
+    "express": "^4.17.1",
+    "telegraf": "^3.32.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.1.2",
-    "@babel/core": "^7.1.2",
-    "@babel/node": "^7.0.0",
-    "@babel/preset-env": "^7.1.0",
-    "debug": "^4.0.1",
-    "nodemon": "^1.18.4",
-    "prettier": "^1.14.3"
+    "@zeit/ncc": "^0.20.4",
+    "debug": "^4.1.1",
+    "nodemon": "^1.19.1",
+    "prettier": "^1.18.2",
+    "ts-node": "^8.3.0",
+    "typescript": "^3.5.3"
   },
   "scripts": {
-    "dev": "DEBUG=bot* dotenv -- nodemon --exec babel-node src/index.js",
+    "dev": "DEBUG=bot* dotenv -- nodemon -e ts -x ts-node src/index.ts",
     "start": "NODE_ENV=production WEBHOOK_URL=${NOW_URL} node dist/index.js",
-    "build": "babel src --out-dir dist",
-    "deploy": "now --dotenv=.env.prod",
-    "prettier": "prettier --single-quote --trailing-comma all --write 'src/**/*.js'"
+    "build": "ncc build src/index.ts -o dist -m",
+    "prettier": "prettier --single-quote --trailing-comma all --write 'src/**/*.ts'"
   }
 }
