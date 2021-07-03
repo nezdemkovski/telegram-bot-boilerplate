@@ -1,3 +1,1 @@
-import { greeting } from './greeting';
-
-export { greeting };
+export { default as greeting } from './greeting';
