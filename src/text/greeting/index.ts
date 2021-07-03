@@ -1,17 +1,22 @@
-const debug = require('debug')('bot:greeting_text');
+import { Context } from 'telegraf';
+import createDebug from 'debug';
 
-const replyToMessage = (ctx: any, messageId: string, string: string) =>
+const debug = createDebug('bot:greeting_textas');
+
+const replyToMessage = (ctx: Context, messageId: number, string: string) =>
   ctx.reply(string, {
     reply_to_message_id: messageId,
   });
 
-const greeting = () => (ctx: any) => {
+const greeting = () => (ctx: Context) => {
   debug('Triggered "greeting" text command');
 
-  const messageId = ctx.message.message_id;
-  const userName = `${ctx.message.from.first_name} ${ctx.message.from.last_name}`;
+  const messageId = ctx.message?.message_id;
+  const userName = `${ctx.message?.from.first_name} ${ctx.message?.from.last_name}`;
 
-  replyToMessage(ctx, messageId, `Hello, ${userName}!`);
+  if (messageId) {
+    replyToMessage(ctx, messageId, `Hello, ${userName}!`);
+  }
 };
 
-export { greeting };
+export default greeting;
