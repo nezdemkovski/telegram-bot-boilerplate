@@ -7,7 +7,7 @@
   "homepage": "https://github.com/yakovlevyuri/telegram-bot-boilerplate",
   "dependencies": {
     "dotenv-cli": "^4.0.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "telegraf": "^4.4.0"
   },
   "devDependencies": {
