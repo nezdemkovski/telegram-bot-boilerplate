@@ -1,21 +1,17 @@
-import { Context } from 'telegraf';
-import createDebug from 'debug';
+import type { Context } from 'grammy';
 
-const debug = createDebug('bot:greeting_textas');
+const log = (msg: string) => console.log(`[bot:greeting] ${msg}`);
 
-const replyToMessage = (ctx: Context, messageId: number, string: string) =>
-  ctx.reply(string, {
-    reply_to_message_id: messageId,
-  });
+const replyToMessage = (ctx: Context, messageId: number, text: string) =>
+  ctx.reply(text, { reply_parameters: { message_id: messageId } });
 
 const greeting = () => (ctx: Context) => {
-  debug('Triggered "greeting" text command');
-
+  log('Triggered "greeting" text handler');
   const messageId = ctx.message?.message_id;
-  const userName = `${ctx.message?.from.first_name} ${ctx.message?.from.last_name}`;
-
+  const firstName = ctx.message?.from.first_name ?? '';
+  const lastName = ctx.message?.from.last_name ?? '';
   if (messageId) {
-    replyToMessage(ctx, messageId, `Hello, ${userName}!`);
+    replyToMessage(ctx, messageId, `Hello, ${firstName} ${lastName}!`);
   }
 };
 

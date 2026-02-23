@@ -1,38 +1,40 @@
-import { Telegraf } from 'telegraf';
-import createDebug from 'debug';
+import { Bot } from 'grammy';
 
 import { about } from './commands';
 import { greeting } from './text';
 
-const debug = createDebug('bot');
+const BOT_TOKEN = process.env.BOT_TOKEN;
+if (!BOT_TOKEN) throw new Error('BOT_TOKEN is not set. Check your .env file.');
 
-const ENVIRONMENT = process.env.NODE_ENV || '';
-const BOT_TOKEN = process.env.BOT_TOKEN || '';
-const USERNAME = process.env.USERNAME || '';
-const PORT = (process.env.PORT && parseInt(process.env.PORT, 10)) || 3000;
-const WEBHOOK_URL = `${process.env.WEBHOOK_URL}/bot${BOT_TOKEN}`;
+const ENVIRONMENT = process.env.NODE_ENV ?? 'development';
+const USERNAME = process.env.USERNAME ?? '';
+const PORT = Number(process.env.PORT) || 3000;
+const WEBHOOK_URL = process.env.WEBHOOK_URL ?? '';
 
-const bot = new Telegraf(BOT_TOKEN);
-
-bot.command('about', about()).on('text', greeting());
+const bot = new Bot(BOT_TOKEN);
+const log = (msg: string) => console.log(`[bot] ${msg}`);
 
 bot.command('about', about());
-bot.command('text', greeting());
+bot.on('message:text', greeting());
 
-const production = () => {
-  debug('Bot runs in production mode');
-  debug(`${USERNAME} setting webhook: ${WEBHOOK_URL}`);
-  bot.telegram.setWebhook(WEBHOOK_URL);
-  debug(`${USERNAME} starting webhook on port: ${PORT}`);
-  // bot.telegram.startWebhook(`/bot${BOT_TOKEN}`, null, PORT);
+const production = async () => {
+  const webhookUrl = `${WEBHOOK_URL}/bot${BOT_TOKEN}`;
+  log(`@${USERNAME} setting webhook: ${webhookUrl}`);
+  await bot.api.setWebhook(webhookUrl);
+  log(`@${USERNAME} webhook set, listening on port ${PORT}`);
 };
 
-const development = () => {
-  debug('Bot runs in development mode');
-  debug(`${USERNAME} deleting webhook`);
-  bot.telegram.deleteWebhook();
-  debug(`${USERNAME} starting polling`);
-  bot.launch();
+const development = async () => {
+  await bot.api.deleteWebhook();
+  log(`@${USERNAME} starting polling`);
+  bot.start();
 };
 
-ENVIRONMENT === 'production' ? production() : development();
+if (ENVIRONMENT === 'production') {
+  production();
+} else {
+  development();
+}
+
+process.once('SIGINT', () => bot.stop());
+process.once('SIGTERM', () => bot.stop());

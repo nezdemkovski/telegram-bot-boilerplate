@@ -1,15 +1,13 @@
-import { Context } from 'telegraf';
-import createDebug from 'debug';
+import type { Context } from 'grammy';
 
 import { author, homepage, name, version } from '../../../package.json';
 
-const debug = createDebug('bot:about_command');
+const log = (msg: string) => console.log(`[bot:about] ${msg}`);
 
 const about = () => (ctx: Context) => {
   const message = `*${name} ${version}*\n${author}\n${homepage}`;
-  debug(`Triggered "about" command with message \n${message}`);
-
-  return ctx.replyWithMarkdown(message);
+  log('Triggered "about" command');
+  return ctx.reply(message, { parse_mode: 'Markdown' });
 };
 
 export default about;

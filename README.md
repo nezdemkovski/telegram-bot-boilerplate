@@ -1,25 +1,50 @@
 # Telegram Bot Boilerplate
 
-Telegram Bot Boilerplate based on Node.js and [Telegraf](https://github.com/telegraf/telegraf) framework.
+Telegram bot boilerplate built with [Bun](https://bun.sh), TypeScript, and [grammY](https://grammy.dev).
 
-## Before you start
+## Requirements
 
-First rename `.env-sample` file to `.env` and fill in all necessary values.
+- Bun 1+
+
+## Getting started
+
+Rename `.env-sample` to `.env` and fill in your values:
 
 ```
 BOT_TOKEN="<YOUR_BOT_API_TOKEN>"
 USERNAME="<YOUR_BOT_USERNAME>"
 WEBHOOK_URL="<THE_URL_OF_YOUR_WEBHOOK>"
-PORT="<PORT>"
+PORT="3000"
+NODE_ENV="development"
 ```
 
-For deployment just create `.env.prod` with your production values.
-
-## Start your server
+Install dependencies and start the dev server:
 
 ```
-yarn install
-yarn dev
+bun install
+bun dev
 ```
 
-Pull Requests are welcomed :)
+## Scripts
+
+| Script | Description |
+|---|---|
+| `bun dev` | Run in development mode with file watching |
+| `bun run build` | Bundle to `dist/` |
+| `bun start` | Run the bundled bot in production mode |
+| `bun run typecheck` | Run TypeScript type checking |
+| `bun run lint` | Run ESLint |
+| `bun run format` | Format source files with Prettier |
+
+## Project structure
+
+```
+src/
+├── index.ts          # Entry point — bot setup, polling/webhook
+├── commands/
+│   └── about/        # /about command
+└── text/
+    └── greeting/     # Text message handler
+```
+
+Pull requests are welcome.
